@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Swine</title>
+    <link rel="alternate" type="text/svg+"/>
     <style>
         body {
             display: flex;
@@ -10,17 +11,34 @@
             align-items: center;
         }
 
-        path:hover {
-            animation: 1.2s active infinite;
-            filter: grayscale(0);
+        #spine {
+            height: 90vh;
+        }
+
+        #hernia {
+            visibility: hidden;
+        }
+
+        #hernia.active {
+            visibility: visible;
+        }
+    </style>
+    <style id="spine-style">
+        path {
             cursor: pointer;
         }
 
-        .active {
-            transform: translate(6px, 0);
+        path:not(.active):hover {
+            animation: 0.6s hover infinite;
+            filter: grayscale(0);
         }
 
-        @keyframes active {
+        path.active {
+            animation: 1s hover infinite;
+            stroke-width: 4px;
+        }
+
+        @keyframes hover {
             50% {
                 opacity: 0.8;
                 transform: translate(6px, 0);
@@ -29,12 +47,26 @@
     </style>
 </head>
 <body>
-<img src="spine.svg"/>
-<img src="hernia.svg"/>
+<object id="spine" data="spine.svg" type="image/svg+xml"></object>
+<object id="hernia" data="hernia.svg" type="image/svg+xml"></object>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  function setupSpine() {
+    this.contentDocument.rootElement.appendChild(document.getElementById('spine-style'));
+    [].forEach.call(this.contentDocument.querySelectorAll('path'), function (path) {
+      path.addEventListener('click', function () {
+        this.style.strokeWidth = this.classList.toggle('active') ? '4px' : '1px';
+        hernia.classList.toggle('active', [].some.call(spine.contentDocument.querySelectorAll('path'), p => p.classList.contains('active')))
+      })
+    })
+  }
 
+  let spine
+  let hernia
+  document.addEventListener('DOMContentLoaded', function () {
+    spine = document.getElementById('spine')
+    hernia = document.getElementById('hernia')
+    spine.addEventListener('load', setupSpine)
   })
 </script>
 </body>
