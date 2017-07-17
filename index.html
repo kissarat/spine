@@ -22,6 +22,10 @@
         #hernia.active {
             visibility: visible;
         }
+
+        #hernia.scaled {
+            transform: scale(1.5);
+        }
     </style>
     <style id="spine-style">
         path {
@@ -51,12 +55,20 @@
 <object id="hernia" data="hernia.svg" type="image/svg+xml"></object>
 
 <script>
+  function someHasClass(selector, className = 'active') {
+    return [].some.call(spine.contentDocument.querySelectorAll(selector), p => p.classList.contains(className))
+  }
+
   function setupSpine() {
     this.contentDocument.rootElement.appendChild(document.getElementById('spine-style'));
-    [].forEach.call(this.contentDocument.querySelectorAll('path'), function (path) {
+    [].forEach.call(this.contentDocument.querySelectorAll('path'), path => {
+//      const text = this.contentDocument.createElement('text')
+//      text.appendChild(this.contentDocument.createTextNode(path.id))
+//      this.contentDocument.appendChild(text)
       path.addEventListener('click', function () {
         this.style.strokeWidth = this.classList.toggle('active') ? '4px' : '1px';
-        hernia.classList.toggle('active', [].some.call(spine.contentDocument.querySelectorAll('path'), p => p.classList.contains('active')))
+        hernia.classList.toggle('active', someHasClass('path'))
+        hernia.classList.toggle('scaled', someHasClass('[id^="D"]'))
       })
     })
   }
