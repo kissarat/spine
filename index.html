@@ -32,21 +32,43 @@
             cursor: pointer;
         }
 
-        path:not(.active):hover {
-            animation: 0.6s hover infinite;
-            filter: grayscale(0);
+        path:not([id^="D"]):not(.active):hover,
+        path.active:not([id^="D"]) {
+            animation: 1s vertebral infinite;
         }
 
-        path.active {
-            animation: 1s hover infinite;
-            stroke-width: 4px;
+        path[id^="D"]:not(.active):hover,
+        path[id^="D"].active {
+            animation: 1s intervertebral infinite;
         }
 
-        @keyframes hover {
+        @keyframes vertebral {
             50% {
                 opacity: 0.8;
                 transform: translate(6px, 0);
             }
+        }
+
+        @keyframes intervertebral {
+            50% {
+                transform: translate(-12px, 0);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #gCERVIX.active {
+            transform: scale(2) translate(-100px, 0);
+        }
+
+        #gTHORAX.active {
+            transform: scale(1.5) translate(-60px, -150px);
+        }
+
+        #gLUMBAR.active {
+            transform: scale(2) translate(-100px, -450px);
         }
     </style>
 </head>
@@ -61,16 +83,17 @@
 
   function setupSpine() {
     this.contentDocument.rootElement.appendChild(document.getElementById('spine-style'));
-    [].forEach.call(this.contentDocument.querySelectorAll('path'), path => {
-//      const text = this.contentDocument.createElement('text')
-//      text.appendChild(this.contentDocument.createTextNode(path.id))
-//      this.contentDocument.appendChild(text)
+    for (const path of this.contentDocument.querySelectorAll('path')) {
       path.addEventListener('click', function () {
         this.style.strokeWidth = this.classList.toggle('active') ? '4px' : '1px';
-        hernia.classList.toggle('active', someHasClass('path'))
+        const hasActive = someHasClass('path')
+        hernia.classList.toggle('active', hasActive)
         hernia.classList.toggle('scaled', someHasClass('[id^="D"]'))
+        for (const part of spine.contentDocument.querySelectorAll('g')) {
+          part.classList.toggle(part === path.parentNode ? 'active' : 'hidden', hasActive)
+        }
       })
-    })
+    }
   }
 
   let spine
