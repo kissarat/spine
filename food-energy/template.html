@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Таблица калорийности более 2000 продуктов</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <meta name="description"
+          content="Найдите энергетическую ценности продуктов питания которые доступны на украинском рынке"/>
+    <style>
+        body {
+            font-family: "Open Sans", sans-serif;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        main {
+            position: relative;
+            margin: auto;
+            text-align: left;
+            width: 580px;
+            padding-top: 26px;
+        }
+
+        header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        tr:nth-child(odd) td {
+            background-color: #dbf3ff;
+        }
+
+        td:nth-child(3) {
+            border-right: 1px solid #0d8dff;
+        }
+
+        td {
+            padding: 2px 4px;
+        }
+
+        td span {
+            opacity: 0.25;
+        }
+
+        [title="0"] span {
+            opacity: 0.06;
+        }
+
+        #search {
+            margin-bottom: 8px;
+            width: 200px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+
+
+    <script>
+      var last = ''
+      var names
+      function search(words) {
+        loop: for (const td of names) {
+          const name = td.getAttribute('title')
+          for (const word of words) {
+            if (name.indexOf(word) < 0) {
+              td.parentNode.classList.add('hidden')
+              continue loop
+            }
+          }
+          td.parentNode.classList.remove('hidden')
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        names = document.querySelectorAll('tbody tr td:first-child')
+        document.getElementById('search').addEventListener('keyup', function (e) {
+          const current = this.value.trim()
+          if ('' === current) {
+            for (const td of names) {
+              td.parentNode.classList.remove('hidden')
+            }
+          }
+          else if (last !== current) {
+            last = current
+            search(current.split(/\s+/).map(s => s.toLocaleLowerCase()))
+          }
+        })
+      })
+
+    </script>
+
+</head>
+<body>
+<main>
+    <header>
+        <span>Таблица калорийности более 2000 продуктов</span>
+        <input id="search" type="search" placeholder="Поиск"/>
+    </header>
+    <article>
+        <table>
+            <thead>
+            <tr>
+                <th>Название продукта</th>
+                <th>Белки</th>
+                <th>Жири</th>
+                <th>Углев.</th>
+                <th>Ккал</th>
+            </tr>
+            </thead>
+            <tbody>
+            {data}
+            </tbody>
+        </table>
+    </article>
+</main>
+</body>
+</html>
