@@ -109,6 +109,8 @@
       var lastSearchTime = 0
       var lastSearchTimer
       var names
+      var tbody
+      var table
       function search(words) {
         if ('string' === typeof words) {
           lastSearch = words
@@ -120,6 +122,9 @@
         }
         if (now - lastSearchTime > DELAY) {
           lastSearchTime = now
+          if (tbody.parentNode) {
+            tbody.remove()
+          }
           loop: for (const td of names) {
             const name = td.getAttribute('title')
             for (const word of words) {
@@ -130,21 +135,27 @@
             }
             td.parentNode.classList.remove('hidden')
           }
+          table.appendChild(tbody)
         }
         else {
           clearTimeout(lastSearchTimer)
           lastSearchTimer = setTimeout(search, DELAY, lastSearch)
         }
+
       }
 
       document.addEventListener('DOMContentLoaded', function () {
         names = document.querySelectorAll('tbody tr td:first-child')
-        document.getElementById('search').addEventListener('keyup', function (e) {
+        tbody = document.querySelector('tbody')
+        table = document.querySelector('table')
+        document.getElementById('search').addEventListener('keyup', function () {
           const current = this.value.trim()
+          tbody.remove()
           if ('' === current) {
             for (const td of names) {
               td.parentNode.classList.remove('hidden')
             }
+            table.appendChild(tbody)
           }
           else if (lastSearch !== current) {
             search(current)
@@ -164,7 +175,7 @@
         <table>
             <thead>
             <tr>
-                <th>Таблица калорийности более 2000 продуктов</th>
+                <th>Таблица калорийности</th>
                 <th>Белки</th>
                 <th>Жиры</th>
                 <th>Углев.</th>
