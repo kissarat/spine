@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Таблица калорийности более 2000 продуктов</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <meta name="description"
           content="Найдите энергетическую ценности продуктов питания которые доступны на украинском рынке"/>
@@ -15,21 +16,28 @@
             text-align: center;
         }
 
+        @media (min-width: 580px) {
+            main {
+                width: 580px;
+            }
+        }
+
         main {
-            position: relative;
             margin: auto;
             text-align: left;
-            width: 580px;
-            padding-top: 26px;
+            padding-top: 40px;
         }
 
         header {
-            position: absolute;
+            position: fixed;
+            height: 40px;
             top: 0;
             right: 0;
             left: 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
         }
 
         table {
@@ -51,6 +59,7 @@
 
         thead th {
             border-top: 1px solid #0d8dff;
+            border-bottom: 1px solid #0d8dff;
         }
 
         td {
@@ -66,12 +75,30 @@
         }
 
         #search {
-            margin-bottom: 8px;
-            width: 200px;
+            width: calc(100vw - 16px);
         }
 
         .hidden {
             display: none;
+        }
+
+        @media (max-width: 579px) {
+            header span {
+                display: none;
+            }
+
+            thead th {
+                font-weight: 400;
+                font-size: 0.8em;
+            }
+
+            table {
+                width: 100vw;
+            }
+
+            td:not([title="0"]) span {
+                display: none;
+            }
         }
     </style>
 
@@ -114,14 +141,13 @@
 <body>
 <main>
     <header>
-        <span>Таблица калорийности более 2000 продуктов</span>
         <input id="search" type="search" placeholder="Поиск"/>
     </header>
     <article>
         <table>
             <thead>
             <tr>
-                <th>Название продукта</th>
+                <th>Таблица калорийности более 2000 продуктов</th>
                 <th>Белки</th>
                 <th>Жиры</th>
                 <th>Углев.</th>
