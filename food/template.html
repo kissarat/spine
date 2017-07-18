@@ -113,7 +113,10 @@
       function search(words) {
         if ('string' === typeof words) {
           lastSearch = words
-          words = words ? words.split(/\s+/).map(s => s.toLocaleLowerCase()) : []
+          words = words ? words
+              .split(/\s+/)
+              .filter(s => s.length > 1)
+              .map(s => s.toLocaleLowerCase()) : []
         }
         const now = Date.now()
         if (0 === words.length) {

@@ -19,7 +19,11 @@ for (const row of data) {
         value = `<span>${cell}</span>`
       }
     }
-    const lower = 'string' === typeof cell ? cell.toLocaleLowerCase() : cell
+    const lower = 'string' === typeof cell ? cell.toLocaleLowerCase()
+        .replace(/[^[a-zа-яъыіїґ\s]+/igu, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+      : cell
     cells.push(`<td title="${lower}">${value}</td>`)
   }
   const string = cells.join('')
