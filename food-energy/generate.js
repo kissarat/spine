@@ -2,11 +2,12 @@ const fs = require('fs')
 
 const template = fs.readFileSync(__dirname + '/template.html').toString('utf8')
 const data = require('./data')
+  .sort((a, b) => a[0].localeCompare(b[0]))
 
 const strings = []
 for (const row of data) {
   const cells = []
-  for (const cell of row) {
+  for (const cell of row.slice(0, 5)) {
     let value = cell
     if ('number' === typeof cell) {
       if (!Number.isInteger(cell)) {

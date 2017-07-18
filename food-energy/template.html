@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Таблица калорийности более 2000 продуктов</title>
+    <title>Таблица калорийности более 3300 продуктов</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <meta name="description"
-          content="Найдите энергетическую ценности продуктов питания которые доступны на украинском рынке"/>
+          content="Найдите энергетическую ценности продуктов питания которые доступны на украинском и российском рынке"/>
     <style>
         body {
             font-family: "Open Sans", sans-serif;
@@ -110,7 +110,6 @@
       var lastSearchTimer
       var names
       var tbody
-      var table
       function search(words) {
         if ('string' === typeof words) {
           lastSearch = words
@@ -122,9 +121,6 @@
         }
         if (now - lastSearchTime > DELAY) {
           lastSearchTime = now
-          if (tbody.parentNode) {
-            tbody.remove()
-          }
           loop: for (const td of names) {
             const name = td.getAttribute('title')
             for (const word of words) {
@@ -135,7 +131,6 @@
             }
             td.parentNode.classList.remove('hidden')
           }
-          table.appendChild(tbody)
         }
         else {
           clearTimeout(lastSearchTimer)
@@ -146,16 +141,12 @@
 
       document.addEventListener('DOMContentLoaded', function () {
         names = document.querySelectorAll('tbody tr td:first-child')
-        tbody = document.querySelector('tbody')
-        table = document.querySelector('table')
         document.getElementById('search').addEventListener('keyup', function () {
           const current = this.value.trim()
-          tbody.remove()
           if ('' === current) {
             for (const td of names) {
               td.parentNode.classList.remove('hidden')
             }
-            table.appendChild(tbody)
           }
           else if (lastSearch !== current) {
             search(current)
