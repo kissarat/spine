@@ -36,12 +36,21 @@
             border-collapse: collapse;
         }
 
+        tr:hover td {
+            font-weight: 900;
+        }
+
         tr:nth-child(odd) td {
             background-color: #dbf3ff;
         }
 
-        td:nth-child(3) {
+        td:nth-child(3),
+        th:nth-child(3) {
             border-right: 1px solid #0d8dff;
+        }
+
+        thead th {
+            border-top: 1px solid #0d8dff;
         }
 
         td {
@@ -114,7 +123,7 @@
             <tr>
                 <th>Название продукта</th>
                 <th>Белки</th>
-                <th>Жири</th>
+                <th>Жиры</th>
                 <th>Углев.</th>
                 <th>Ккал</th>
             </tr>
