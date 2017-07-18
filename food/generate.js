@@ -1,8 +1,9 @@
 const fs = require('fs')
 
 const template = fs.readFileSync(__dirname + '/template.html').toString('utf8')
-const data = require('./data')
+const data = require('./energy')
   .sort((a, b) => a[0].localeCompare(b[0]))
+  // .sort((a, b) => b[4] - a[4])
 
 const strings = []
 for (const row of data) {
@@ -26,4 +27,4 @@ for (const row of data) {
 }
 
 const html = template.replace('{data}', strings.join('\n'))
-fs.writeFileSync(__dirname + '/index.html', html)
+fs.writeFileSync(__dirname + '/energy/index.html', html)
