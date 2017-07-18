@@ -104,18 +104,36 @@
 
 
     <script>
-      var last = ''
+      const DELAY = 200
+      var lastSearch = ''
+      var lastSearchTime = 0
+      var lastSearchTimer
       var names
       function search(words) {
-        loop: for (const td of names) {
-          const name = td.getAttribute('title')
-          for (const word of words) {
-            if (name.indexOf(word) < 0) {
-              td.parentNode.classList.add('hidden')
-              continue loop
+        if ('string' === typeof words) {
+          lastSearch = words
+          words = words ? words.split(/\s+/).map(s => s.toLocaleLowerCase()) : []
+        }
+        const now = Date.now()
+        if (0 === words.length) {
+          return
+        }
+        if (now - lastSearchTime > DELAY) {
+          lastSearchTime = now
+          loop: for (const td of names) {
+            const name = td.getAttribute('title')
+            for (const word of words) {
+              if (name.indexOf(word) < 0) {
+                td.parentNode.classList.add('hidden')
+                continue loop
+              }
             }
+            td.parentNode.classList.remove('hidden')
           }
-          td.parentNode.classList.remove('hidden')
+        }
+        else {
+          clearTimeout(lastSearchTimer)
+          lastSearchTimer = setTimeout(search, DELAY, lastSearch)
         }
       }
 
@@ -128,9 +146,8 @@
               td.parentNode.classList.remove('hidden')
             }
           }
-          else if (last !== current) {
-            last = current
-            search(current.split(/\s+/).map(s => s.toLocaleLowerCase()))
+          else if (lastSearch !== current) {
+            search(current)
           }
         })
       })
