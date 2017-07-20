@@ -52,3 +52,18 @@ const html = template
   .replace('{data}', strings.join('\n'))
   .replace('"dict"', JSON.stringify(qz.map(a => a[0]).slice(0, 1000)))
 fs.writeFileSync(__dirname + '/energy/index.html', html)
+
+const sql = ['INSERT INTO food(name, proteins, lipids, сarbohydrates, energy, type) VALUES']
+    .concat(data.map(function (r) {
+      const name = r[0].replace(/"/g, '""')
+      if (!(r[4] >= 0)) {
+        r[5] = r[4]
+        r[4] = 0
+      }
+      const type = r[5] ? `'${r[5]}'` : 'null'
+      return `("${name}", ${r[1]}, ${r[2]}, ${r[3]}, ${r[4]}, ${type})`
+    }).join(',\n'))
+    .join('\n')
+  + ';'
+
+fs.writeFileSync(__dirname + '/energy/index.sql', sql)

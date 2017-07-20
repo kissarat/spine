@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 function objectDuplicates(o, b) {
   if (b) {
     const r = {}
@@ -101,8 +103,8 @@ const a = [
 const b = [
   "sift",
   "knead",
-  "let stand",
-  "lay out",
+  "let_stand",
+  "lay_out",
   "shape",
   "season",
   "flavor",
@@ -132,3 +134,10 @@ const b = [
 
   "pour"
 ]
+
+const actionsEnum = {}
+for(let i = 0; i < b.length; i++) {
+  actionsEnum[b[i]] = i + 1
+}
+
+fs.writeFileSync(__dirname + '/../enums/actions.json', JSON.stringify(actionsEnum, null, '  ') + '\n')

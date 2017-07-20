@@ -1,0 +1,19 @@
+{
+  "mushroom": 1,
+  "sausage": 2,
+  "cereals": 3,
+  "butter": 4,
+  "milk": 5,
+  "meal": 6,
+  "beef": 7,
+  "vegetable": 8,
+  "nut": 9,
+  "sea": 10,
+  "snack": 11,
+  "cheese": 12,
+  "raw": 13,
+  "fruit": 14,
+  "bread": 15,
+  "berry": 16,
+  "egg": 17
+}
