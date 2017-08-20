@@ -32,7 +32,7 @@
             cursor: pointer;
         }
 
-        path:not([id^="D"]):not(.active):hover,
+        g.active path:not([id^="D"]):not(.active):hover,
         path.active:not([id^="D"]) {
             animation: 1s vertebral infinite;
         }
@@ -55,8 +55,16 @@
             }
         }
 
+        .selection > g:not(.active) {
+            visibility: hidden;
+        }
+
         .hidden {
-            display: none;
+            visibility: hidden;
+        }
+
+        .active {
+            visibility: visible;
         }
 
         #gCERVIX.active {
@@ -77,23 +85,91 @@
 <object id="hernia" data="hernia.svg" type="image/svg+xml"></object>
 
 <script>
-  function someHasClass(selector, className = 'active') {
-    return [].some.call(spine.contentDocument.querySelectorAll(selector), p => p.classList.contains(className))
+  function extend(p, o) {
+    for (const key in o) {
+      p[key] = o[key]
+    }
   }
+
+  const Collection = {
+    on(event, listener) {
+      for (const node of this) {
+        node.addEventListener(event, listener)
+      }
+    },
+
+    off(event, listener) {
+      for (const node of this) {
+        node.removeEventListener(event, listener)
+      }
+    },
+
+    hasSelection() {
+      for (const node of this) {
+        if (node.classList.contains('active')) {
+          return true
+        }
+      }
+      return false
+    },
+
+    clear(className = 'active') {
+      for (const node of this) {
+        node.classList.remove(className)
+      }
+    }
+  }
+
+  function setup(w = window) {
+    extend(w.NodeList.prototype, Collection)
+    extend(w.HTMLCollection.prototype, Collection)
+    extend(w.Element.prototype, {
+      select(activate) {
+        const isActive = !this.classList.contains('active')
+        if (activate === isActive) {
+          return activate
+        }
+        this.parentNode.classList.toggle('selection', isActive)
+        this.classList.toggle('active', isActive)
+        return isActive
+      },
+
+      selected(className = 'active') {
+        return this.classList.contains(className)
+      }
+    })
+
+    extend(w.HTMLObjectElement.prototype, {
+      all(selector) {
+        return this.contentDocument.querySelectorAll(selector)
+      }
+    })
+  }
+
+  setup()
 
   function setupSpine() {
     this.contentDocument.rootElement.appendChild(document.getElementById('spine-style'));
-    for (const path of this.contentDocument.querySelectorAll('path')) {
-      path.addEventListener('click', function () {
-        this.style.strokeWidth = this.classList.toggle('active') ? '4px' : '1px';
-        const hasActive = someHasClass('path')
-        hernia.classList.toggle('active', hasActive)
-        hernia.classList.toggle('scaled', someHasClass('[id^="D"]'))
-        for (const part of spine.contentDocument.querySelectorAll('g')) {
-          part.classList.toggle(part === path.parentNode ? 'active' : 'hidden', hasActive)
+    const parts = spine.all('g')
+    function onSelectPart() {
+      const paths = this.children
+      function onSelectPath() {
+        const isActive = this.select()
+        this.style.strokeWidth = isActive ? '4px' : '1px'
+        const hasSelection = isActive || paths.hasSelection()
+        hernia.classList.toggle('active', hasSelection)
+        if (!hasSelection) {
+          paths.off('click', onSelectPath)
+          parts.on('click', onSelectPart)
         }
-      })
+      }
+
+      if (this.select()) {
+        parts.off('click', onSelectPart)
+        paths.on('click', onSelectPath)
+      }
     }
+    parts.on('click', onSelectPart)
   }
 
   let spine
@@ -101,6 +177,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     spine = document.getElementById('spine')
     hernia = document.getElementById('hernia')
+    setup(spine.contentWindow)
     spine.addEventListener('load', setupSpine)
   })
 </script>
